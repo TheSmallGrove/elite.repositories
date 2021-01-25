@@ -26,11 +26,11 @@ namespace TestWorker
         {
             var unitOfWork = this.Provider.ServiceProvider.GetService<IUnitOfWork>();
 
-            using(var session = await unitOfWork.BeginAsync())
-            {
+//            using(var session = await unitOfWork.BeginAsync())
+//            {
                 var produts = unitOfWork.CreateRepository<IProductRepository>();
 
-            }
+//            }
 
             while (!stoppingToken.IsCancellationRequested)
             {

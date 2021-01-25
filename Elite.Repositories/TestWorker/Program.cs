@@ -24,7 +24,7 @@ namespace TestWorker
                 {
                     services.AddDbContext<TestDbContext>(builder =>
                     {
-
+                        builder.UseInMemoryDatabase("data");
                     });
 
                     services
