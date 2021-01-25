@@ -1,20 +1,29 @@
-﻿using Elite.Repositories.Abstractions;
-using System;
+﻿//using Elite.Repositories.Abstractions;
+//using Microsoft.Extensions.DependencyInjection;
+//using System;
 
-namespace Elite.Repositories.Extensions.DependencyInjection
-{
-    public class ServiceProviderRepositoryFactory : IRepositoryFactory
-    {
-        private IServiceProvider Provider { get; }
+//namespace Elite.Repositories.Extensions.DependencyInjection
+//{
+//    public class ServiceProviderRepositoryFactory : IUnitOfWorkFactory
+//    {
+//        private Guid id = Guid.NewGuid();
 
-        public ServiceProviderRepositoryFactory(IServiceProvider provider)
-        {
-            this.Provider = provider;
-        }
+//        private IServiceProvider Provider { get; }
 
-        public T CreateRepository<T>() where T : IRepository
-        {
-            return (T)this.Provider.GetService(typeof(T));
-        }
-    }
-}
+//        public ServiceProviderRepositoryFactory(IServiceProvider provider)
+//        {
+//            this.Provider = provider;
+//            var scope = provider.CreateScope();
+//        }
+
+//        public IUnitOfWork CreateUnitOfWork()
+//        {
+//            return new EntityUnitOfWork(this);
+//        }
+
+//        public T GetRepository<T>() where T : IRepository
+//        {
+//            return this.Provider.GetRequiredService<T>();
+//        }
+//    }
+//}

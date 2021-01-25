@@ -12,37 +12,34 @@ namespace TestWorker
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        private IUnitOfWorkFactory Factory { get; }
 
-        private IServiceScope Provider { get; }
-
-        public Worker(ILogger<Worker> logger, IServiceProvider provider)
+        public Worker(IUnitOfWorkFactory factory)
         {
-            _logger = logger;
-            this.Provider = provider.CreateScope();
+            this.Factory = factory;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var unitOfWork = this.Provider.ServiceProvider.GetService<IUnitOfWork>();
+            using (var unitOfWork = this.Factory.BeginUnitOfWork())
+            {
+                var products1 = unitOfWork.GetRepository<IProductRepository>();
 
-//            using(var session = await unitOfWork.BeginAsync())
-//            {
-                var produts = unitOfWork.CreateRepository<IProductRepository>();
+                var test = products1.GetAll();
 
-//            }
+                using (var transaction = await unitOfWork.BeginTransaction())
+                {
+                    var products = unitOfWork.GetRepository<IProductRepository>();
+                    var test1 = products.GetAll();
+
+                    await transaction.CompleteAsync();
+                }
+            }
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 await Task.Delay(1000, stoppingToken);
             }
-        }
-
-        public override void Dispose()
-        {
-            this.Provider.Dispose();
-            base.Dispose();
         }
     }
 }

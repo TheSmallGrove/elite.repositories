@@ -1,4 +1,5 @@
 ﻿using Elite.Repositories.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
@@ -10,37 +11,42 @@ using System.Threading.Tasks;
 namespace Elite.Repositories.EntityFramework
 {
     public class EntityUnitOfWork<TContext> : IUnitOfWork
-        where TContext : DbContext
+        where TContext: DbContext
     {
-        private IRepositoryFactory Factory { get; }
+        private IServiceScope Scope { get; }
         private TContext Context { get; }
 
-        public EntityUnitOfWork(IRepositoryFactory factory, TContext context)
+        public EntityUnitOfWork(IServiceScope scope)
         {
-            this.Factory = factory;
-            this.Context = context;
+            this.Scope = scope;
+            this.Context = this.Scope.ServiceProvider.GetRequiredService<TContext>();
         }
 
-        public async Task<IUnitOfWorkSession> BeginAsync()
+        public async Task<IUnitOfWorkTransaction> BeginTransaction()
         {
-            return new EntityUnitOfWorkSession(this, await this.Context.Database.BeginTransactionAsync());
+            return new EntityUnitOfWorkTransaction(this, await this.Context.Database.BeginTransactionAsync());
         }
 
-        public T CreateRepository<T>() where T : IRepository
+        public T GetRepository<T>()
+            where T: IRepository
         {
-            return this.Factory.CreateRepository<T>();
+            return this.Scope.ServiceProvider.GetRequiredService<T>();
         }
 
-        private class EntityUnitOfWorkSession : IUnitOfWorkSession
+        public void Dispose()
+        {
+            this.Scope.Dispose();
+        }
+
+        private class EntityUnitOfWorkTransaction : IUnitOfWorkTransaction
         {
             private EntityUnitOfWork<TContext> UnitOfWork { get; }
             private IDbContextTransaction Transaction { get; set; }
-
             public bool IsCompleted { get; private set; }
 
-            public EntityUnitOfWorkSession(EntityUnitOfWork<TContext> unitOfWork, IDbContextTransaction transaction)
+            public EntityUnitOfWorkTransaction(EntityUnitOfWork<TContext> unitOfWork, IDbContextTransaction transaction)
             {
-                this.UnitOfWork = unitOfWork;
+                this.UnitOfWork = unitOfWork;                
                 this.Transaction = transaction;
                 this.IsCompleted = false;
             }

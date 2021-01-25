@@ -13,5 +13,14 @@ namespace TestWorker
         : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Product>()
+                .ToTable("Products")
+                .HasKey(_ => _.Id);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

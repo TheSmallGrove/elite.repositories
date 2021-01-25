@@ -1,6 +1,5 @@
 using Elite.Repositories.Abstractions;
 using Elite.Repositories.EntityFramework;
-using Elite.Repositories.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,24 +23,31 @@ namespace TestWorker
                 {
                     services.AddDbContext<TestDbContext>(builder =>
                     {
-                        builder.UseInMemoryDatabase("data");
+                        builder.UseSqlite("Data Source=.\\database.db;");
                     });
 
                     services
-                        .AddSingleton<IRepositoryFactory, ServiceProviderRepositoryFactory>()
-                        .AddTransient<IUnitOfWork, EntityUnitOfWork<TestDbContext>>()
+                        .AddTransient<IUnitOfWorkFactory, EntityUnitOfWorkFactory>()
+                        .AddTransient<IUnitOfWork, EntityUnitOfWork<TestDbContext>>(o => new EntityUnitOfWork<TestDbContext>(o.CreateScope()))
                         .AddTransient<IProductRepository, ProductRepository>()
                         .AddHostedService<Worker>();
                 });
     }
 
     public interface IProductRepository : IRepository
-    { }
+    {
+        IEnumerable<Product> GetAll();
+    }
 
     public class ProductRepository : EntityRepository<Product>, IProductRepository
     {
         public ProductRepository(TestDbContext context) : base(context)
         {
+        }
+
+        public IEnumerable<Product> GetAll()
+        {
+            return this.All().ToArray();
         }
     }
 }

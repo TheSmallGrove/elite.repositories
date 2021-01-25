@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Elite.Repositories.Abstractions
 {
-    public interface IUnitOfWorkSession : IDisposable
+    public interface IUnitOfWorkTransaction: IDisposable
     {
         Task SaveAsync();
         Task CompleteAsync();
