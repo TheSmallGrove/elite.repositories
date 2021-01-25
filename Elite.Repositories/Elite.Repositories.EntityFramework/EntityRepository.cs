@@ -21,17 +21,20 @@ namespace Elite.Repositories.EntityFramework
 
         public override Task Delete(TEntity entity)
         {
-            throw new NotImplementedException();
+            this.Context.Set<TEntity>().Remove(entity);
+            return Task.CompletedTask;
         }
 
         public override Task Insert(TEntity entity)
         {
-            throw new NotImplementedException();
+            this.Context.Set<TEntity>().Add(entity);
+            return Task.CompletedTask;
         }
 
         public override Task Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            this.Context.Set<TEntity>().Update(entity);
+            return Task.CompletedTask;
         }
 
         protected override IQueryable<TEntity> All()

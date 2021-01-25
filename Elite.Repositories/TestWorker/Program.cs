@@ -34,7 +34,7 @@ namespace TestWorker
                 });
     }
 
-    public interface IProductRepository : IRepository
+    public interface IProductRepository : IRepository<Product>
     {
         IEnumerable<Product> GetAll();
     }

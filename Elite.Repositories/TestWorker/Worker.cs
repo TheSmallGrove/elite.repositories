@@ -30,10 +30,17 @@ namespace TestWorker
                 using (var transaction = await unitOfWork.BeginTransaction())
                 {
                     var products = unitOfWork.GetRepository<IProductRepository>();
-                    var test1 = products.GetAll();
 
+                    await products.Insert(new Product
+                    {
+                        Id = DateTime.Now.Millisecond.ToString(),
+                        Name = "Prova"
+                    });
+                    
                     await transaction.CompleteAsync();
                 }
+
+                var test1 = products1.GetAll();
             }
 
             while (!stoppingToken.IsCancellationRequested)
