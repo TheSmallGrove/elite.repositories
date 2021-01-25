@@ -13,7 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Elite.Repositories.Abstractions\Elite.Repositories.Abstractions.csproj" />
     <ProjectReference Include="..\Elite.Repositories.EntityFramework\Elite.Repositories.EntityFramework.csproj" />
-    <ProjectReference Include="..\Elite.Repositories.Extensions.DependencyInjection\Elite.Repositories.Extensions.DependencyInjection.csproj" />
   </ItemGroup>
 
   <ItemGroup>
