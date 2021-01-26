@@ -6,11 +6,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace Elite.Repositories.EntityFramework
 {
-    public class EntityRepository<TEntity> : Repository<TEntity>
-        where TEntity : class
+    public abstract class EntityRepository<TEntity, TKey> : Repository<TEntity, TKey>
+        where TEntity : class, IEntity
+        where TKey: ITuple
     {
         private DbContext Context { get; }
 
@@ -19,27 +21,73 @@ namespace Elite.Repositories.EntityFramework
             this.Context = context;
         }
 
-        public override Task Delete(TEntity entity)
+        public override async Task InsertAsync(TEntity entity)
         {
-            this.Context.Set<TEntity>().Remove(entity);
-            return Task.CompletedTask;
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            await this.Context.Set<TEntity>().AddAsync(entity);
+            await this.Context.SaveChangesAsync(true);
         }
 
-        public override Task Insert(TEntity entity)
+        public override async Task InsertAsync(params TEntity[] entities)
         {
-            this.Context.Set<TEntity>().Add(entity);
-            return Task.CompletedTask;
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            if (entities.Any())
+            {
+                await this.Context.Set<TEntity>().AddRangeAsync(entities);
+                await this.Context.SaveChangesAsync(true);
+            }
         }
 
-        public override Task Update(TEntity entity)
+        public override Task UpdateAsync(TEntity entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             this.Context.Set<TEntity>().Update(entity);
+            return this.Context.SaveChangesAsync(true);
+        }
+
+        public override Task UpdateAsync(params TEntity [] entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            if (entities.Any())
+            {
+                this.Context.Set<TEntity>().UpdateRange(entities);
+                return this.Context.SaveChangesAsync(true);
+            }
+
             return Task.CompletedTask;
         }
 
-        protected override IQueryable<TEntity> All()
+        public override Task DeleteAsync(TEntity entity)
         {
-            return this.Context.Set<TEntity>();
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            this.Context.Set<TEntity>().Remove(entity);
+            return this.Context.SaveChangesAsync(true);
         }
+
+        public override Task DeleteAsync(params TEntity[] entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            if (entities.Any())
+            {
+                this.Context.Set<TEntity>().RemoveRange(entities);
+                return this.Context.SaveChangesAsync(true);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        protected override IQueryable<TEntity> Set => this.Context.Set<TEntity>();
     }
 }

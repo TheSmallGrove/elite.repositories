@@ -56,18 +56,8 @@ namespace Elite.Repositories.EntityFramework
                 if (this.IsCompleted)
                     throw new InvalidOperationException("Cannot complete a transaction that has been already completed");
 
-                await this.SaveAsync();
                 await this.Transaction.CommitAsync();
                 this.IsCompleted = true;
-            }
-
-            public async Task SaveAsync()
-            {
-                if (this.IsCompleted)
-                    throw new InvalidOperationException("Cannot save in a transaction that has been already completed");
-
-                if (this.UnitOfWork.Context.ChangeTracker.HasChanges())
-                    await this.UnitOfWork.Context.SaveChangesAsync();
             }
 
             public void Dispose()

@@ -21,33 +21,35 @@ namespace TestWorker
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddDbContext<TestDbContext>(builder =>
-                    {
-                        builder.UseSqlite("Data Source=.\\database.db;");
-                    });
+                    services.AddEntityRepository<TestDbContext>(
+                        builder => builder.UseSqlite("Data Source=.\\database.db;"));
 
                     services
-                        .AddTransient<IUnitOfWorkFactory, EntityUnitOfWorkFactory>()
-                        .AddTransient<IUnitOfWork, EntityUnitOfWork<TestDbContext>>(o => new EntityUnitOfWork<TestDbContext>(o.CreateScope()))
-                        .AddTransient<IProductRepository, ProductRepository>()
+                        .AddRepository<IProductRepository, ProductRepository>();
+
+                    services
                         .AddHostedService<Worker>();
                 });
     }
 
-    public interface IProductRepository : IRepository<Product>
+    public interface IProductRepository : IRepository<Product, (string Id, string IdGroup)>
     {
-        IEnumerable<Product> GetAll();
+        Task<IEnumerable<Product>> GetAllAsync();
     }
 
-    public class ProductRepository : EntityRepository<Product>, IProductRepository
+    public class ProductRepository : EntityRepository<Product, (string Id, string IdGroup)>, IProductRepository
     {
-        public ProductRepository(TestDbContext context) : base(context)
+        public ProductRepository(TestDbContext context) 
+            : base(context)
+        { }
+
+        public override Task<Product> GetByKeyAsync((string Id, string IdGroup) key)
         {
+            return (from entity in this.Set
+                    where entity.Id == key.Id && entity.IdGroup == key.IdGroup
+                    select entity).SingleOrDefaultAsync();
         }
 
-        public IEnumerable<Product> GetAll()
-        {
-            return this.All().ToArray();
-        }
+        public async Task<IEnumerable<Product>> GetAllAsync() => await this.Set.ToArrayAsync();
     }
 }

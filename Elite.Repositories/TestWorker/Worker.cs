@@ -25,22 +25,23 @@ namespace TestWorker
             {
                 var products1 = unitOfWork.GetRepository<IProductRepository>();
 
-                var test = products1.GetAll();
+                var test = await products1.GetByKeyAsync(("607", "aaa"));
 
                 using (var transaction = await unitOfWork.BeginTransaction())
                 {
                     var products = unitOfWork.GetRepository<IProductRepository>();
 
-                    await products.Insert(new Product
+                    await products.InsertAsync(new Product
                     {
                         Id = DateTime.Now.Millisecond.ToString(),
+                        IdGroup = "aaa",
                         Name = "Prova"
                     });
                     
                     await transaction.CompleteAsync();
                 }
 
-                var test1 = products1.GetAll();
+                var test1 = await products1.GetAllAsync();
             }
 
             while (!stoppingToken.IsCancellationRequested)
