@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace TestWorker
@@ -30,26 +29,5 @@ namespace TestWorker
                     services
                         .AddHostedService<Worker>();
                 });
-    }
-
-    public interface IProductRepository : IRepository<Product, (string Id, string IdGroup)>
-    {
-        Task<IEnumerable<Product>> GetAllAsync();
-    }
-
-    public class ProductRepository : EntityRepository<Product, (string Id, string IdGroup)>, IProductRepository
-    {
-        public ProductRepository(TestDbContext context) 
-            : base(context)
-        { }
-
-        public override Task<Product> GetByKeyAsync((string Id, string IdGroup) key)
-        {
-            return (from entity in this.Set
-                    where entity.Id == key.Id && entity.IdGroup == key.IdGroup
-                    select entity).SingleOrDefaultAsync();
-        }
-
-        public async Task<IEnumerable<Product>> GetAllAsync() => await this.Set.ToArrayAsync();
     }
 }

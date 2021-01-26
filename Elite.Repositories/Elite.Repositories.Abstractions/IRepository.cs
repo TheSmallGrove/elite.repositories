@@ -19,5 +19,6 @@ namespace Elite.Repositories.Abstractions
         Task UpdateAsync(params TEntity[] entities);
         Task DeleteAsync(TEntity entity);
         Task DeleteAsync(params TEntity[] entities);
+        Task DeleteByKeyAsync(TKey key);
     }
 }
