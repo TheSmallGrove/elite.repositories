@@ -1,5 +1,5 @@
 # This is a basic workflow to help you get started with Actions
-# apiKey: oy2e6lfsh2rt5wkbwsyqie5v4agffikexnzc6zg6v4z5a4
+# apiKey: 
 
 name: CI
 
@@ -20,7 +20,10 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    env:
+      NUGET_APIKEY: 'oy2e6lfsh2rt5wkbwsyqie5v4agffikexnzc6zg6v4z5a4'
+      NUGET_ENDPOINT: 'https://www.nuget.org/api/v2/package'
+      
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -42,6 +45,9 @@ jobs:
 
       - name: Build solution
         run: dotnet pack $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/packages
+
+   #   - name: Build solution
+   #     run: dotnet nuget push $GITHUB_WORKSPACE/packages/*.nupkg -k $NUGET_APIKEY -s $NUGET_ENDPOINT
 
       - name: Debug info
         run: |
