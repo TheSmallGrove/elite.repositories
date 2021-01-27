@@ -7,9 +7,9 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [ beta ]
   pull_request:
-    branches: [ main ]
+    branches: [ beta ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -44,7 +44,7 @@ jobs:
         run: dotnet build $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/publish
 
       - name: Pack nuget
-        run: dotnet pack $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/packages
+        run: dotnet pack $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/packages /p:VersionSuffix=`printf "beta-%05d" $GITHUB_RUN_NUMBER`
 
       - name: Push nuget pkgs
         run: |
