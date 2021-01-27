@@ -4,6 +4,6 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<IsPackable>true</IsPackable>
 		<VersionPrefix>1.0.0.18654</VersionPrefix>
-		<PackageLicenseExpression>CC BY-SA 4.0</PackageLicenseExpression>
+		<PackageLicenseFile>..\..\LICENSE.md</PackageLicenseFile>
 	</PropertyGroup>
 </Project>
