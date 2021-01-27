@@ -5,6 +5,11 @@
 		<IsPackable>true</IsPackable>
 		<VersionPrefix>1.0.0.18654</VersionPrefix>
 		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/TheSmallGrove/elite.repositories</PackageProjectUrl>
+		<Authors>Andrea Boschin</Authors>
+		<Company>Elite Agency</Company>
+		<Description>Entity framework core implementation of data access layer based on repository and unit-of-work patterns</Description>
+		<Copyright>2021 by A. Boschin</Copyright>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.2" />

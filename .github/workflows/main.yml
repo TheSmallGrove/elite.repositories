@@ -47,7 +47,17 @@ jobs:
         run: dotnet pack $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/packages /p:VersionSuffix=`printf "alpha-%05d" $GITHUB_RUN_NUMBER`
 
       - name: Push nuget pkgs
-        run: dotnet nuget push $GITHUB_WORKSPACE/packages/*.nupkg -k $NUGET_APIKEY -s $NUGET_ENDPOINT
+        run: |
+            echo "LISTING FILES TO PUSH '$f' ---------------------------------------"
+            ls $GITHUB_WORKSPACE/packages/*.nupkg
+            echo "---------------------------------------------------------"
+
+            for f in $GITHUB_WORKSPACE/packages
+            do
+                echo "PUSHING FILE '$f' ---------------------------------------"
+                dotnet nuget push $f -k $NUGET_APIKEY -s $NUGET_ENDPOINT
+                echo "---------------------------------------------------------"
+            done        
 
       - name: Debug info
         run: |
