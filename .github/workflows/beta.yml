@@ -1,0 +1,63 @@
+# This is a basic workflow to help you get started with Actions
+# apiKey: 
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ beta ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+      NUGET_APIKEY: 'oy2e6lfsh2rt5wkbwsyqie5v4agffikexnzc6zg6v4z5a4'
+      NUGET_ENDPOINT: 'https://www.nuget.org/api/v2/package'
+      
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: 5.0.101
+
+      - name: Debug info
+        run: |
+          echo 'GITHUB_WORKSPACE="$GITHUB_WORKSPACE"'
+          ls $GITHUB_WORKSPACE
+
+      # Runs a single command using the runners shell
+      - name: Build solution
+        run: dotnet build $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/publish
+
+      - name: Pack nuget
+        run: dotnet pack $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/packages /p:VersionSuffix=`printf "beta-%05d" $GITHUB_RUN_NUMBER`
+
+      - name: Push nuget pkgs
+        run: |
+            echo "LISTING FILES TO PUSH '$f' ---------------------------------------"
+            ls $GITHUB_WORKSPACE/packages/*.nupkg
+            echo "---------------------------------------------------------"
+
+            for f in $GITHUB_WORKSPACE/packages/*.nupkg
+            do
+                echo "PUSHING FILE '$f' ---------------------------------------"
+                dotnet nuget push $f -k $NUGET_APIKEY -s $NUGET_ENDPOINT
+                echo "---------------------------------------------------------"
+            done        
+
+      - name: Debug info
+        run: |
+          echo 'GITHUB_WORKSPACE="$GITHUB_WORKSPACE"'
+          ls -r $GITHUB_WORKSPACE/p*
