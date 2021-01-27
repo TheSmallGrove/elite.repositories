@@ -44,7 +44,7 @@ jobs:
         run: dotnet build $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/publish
 
       - name: Build solution
-        run: dotnet pack $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/packages
+        run: dotnet pack $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/packages /p:VersionSuffix=`printf "alpha-%05d" $GITHUB_RUN_ID`
 
    #   - name: Build solution
    #     run: dotnet nuget push $GITHUB_WORKSPACE/packages/*.nupkg -k $NUGET_APIKEY -s $NUGET_ENDPOINT
