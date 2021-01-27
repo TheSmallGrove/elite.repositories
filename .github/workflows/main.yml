@@ -52,7 +52,7 @@ jobs:
             ls $GITHUB_WORKSPACE/packages/*.nupkg
             echo "---------------------------------------------------------"
 
-            for f in $GITHUB_WORKSPACE/packages
+            for f in $GITHUB_WORKSPACE/packages/*.nupkg
             do
                 echo "PUSHING FILE '$f' ---------------------------------------"
                 dotnet nuget push $f -k $NUGET_APIKEY -s $NUGET_ENDPOINT
