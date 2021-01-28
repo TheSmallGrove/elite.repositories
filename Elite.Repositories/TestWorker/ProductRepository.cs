@@ -9,7 +9,6 @@ namespace TestWorker
 {
     public interface IProductRepository : IRepository<Product, (string Id, string IdGroup)>
     {
-        Task<IEnumerable<Product>> GetAllAsync();
     }
 
     class ProductRepository : EntityRepository<Product, (string Id, string IdGroup)>, IProductRepository
@@ -30,7 +29,5 @@ namespace TestWorker
             var entity = await this.GetByKeyAsync(key);
             await base.DeleteAsync(entity);
         }
-
-        public async Task<IEnumerable<Product>> GetAllAsync() => await this.Set.ToArrayAsync();
     }
 }

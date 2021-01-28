@@ -9,8 +9,7 @@ namespace Elite.Repositories.Abstractions
     { }
 
     public interface IRepository<TEntity, TKey> : IRepository
-        where TEntity : class, IEntity
-        where TKey: ITuple
+    where TEntity : class, IEntity
     {
         Task<TEntity> GetByKeyAsync(TKey key);
         Task InsertAsync(TEntity entity);
@@ -20,5 +19,6 @@ namespace Elite.Repositories.Abstractions
         Task DeleteAsync(TEntity entity);
         Task DeleteAsync(params TEntity[] entities);
         Task DeleteByKeyAsync(TKey key);
+        Task<IEnumerable<TEntity>> GetAllAsync();
     }
 }
