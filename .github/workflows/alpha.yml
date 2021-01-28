@@ -41,6 +41,9 @@ jobs:
       - name: Build solution
         run: dotnet build $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/publish
 
+      - name: Run automated testing
+        run: dotnet test $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Debug
+
       - name: Pack nuget
         run: dotnet pack $GITHUB_WORKSPACE/Elite.Repositories/Elite.Repositories.sln -c Release -o $GITHUB_WORKSPACE/packages /p:VersionSuffix=`printf "alpha-%05d" $GITHUB_RUN_NUMBER`
 
