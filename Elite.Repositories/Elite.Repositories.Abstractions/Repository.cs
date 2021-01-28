@@ -9,7 +9,6 @@ namespace Elite.Repositories.Abstractions
 {
     public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
         where TEntity : class, IEntity
-        where TKey: ITuple
     {
         public abstract Task<TEntity> GetByKeyAsync(TKey key);
         public abstract Task InsertAsync(TEntity entity);
@@ -19,6 +18,7 @@ namespace Elite.Repositories.Abstractions
         public abstract Task DeleteAsync(TEntity entity);
         public abstract Task DeleteAsync(params TEntity[] entities);
         public abstract Task DeleteByKeyAsync(TKey key);
+        public abstract Task<IEnumerable<TEntity>> GetAllAsync();
         protected abstract IQueryable<TEntity> Set { get; }
     }
 }

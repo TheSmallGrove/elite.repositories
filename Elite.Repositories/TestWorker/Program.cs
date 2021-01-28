@@ -24,6 +24,7 @@ namespace TestWorker
                         builder => builder.UseSqlite("Data Source=.\\database.db;"));
 
                     services
+                        .AddRepository<ICategoryRepository, CategoryRepository>()
                         .AddRepository<IProductRepository, ProductRepository>();
 
                     services
