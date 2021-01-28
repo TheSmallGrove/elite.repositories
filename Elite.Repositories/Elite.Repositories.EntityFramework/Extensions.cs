@@ -4,17 +4,20 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+
+[assembly:InternalsVisibleTo("Elite.Repositories.EntityFramework.Tests")]
 
 namespace Elite.Repositories.EntityFramework
 {
     public static class Extensions
     {
-        public static IServiceCollection AddEntityRepository<TContext>(this IServiceCollection services, Action<DbContextOptionsBuilder> builder)
+        public static IServiceCollection AddEntityRepository<TContext>(this IServiceCollection services, Action<DbContextOptionsBuilder> builder = null)
             where TContext: DbContext
         {
-            services.AddDbContext<TContext>(_ => builder(_));
+            services.AddDbContext<TContext>(options => builder?.Invoke(options));
 
             return services
                 .AddTransient<IUnitOfWorkFactory, EntityUnitOfWorkFactory>()

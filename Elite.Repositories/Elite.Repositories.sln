@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elite.Repositories", "Elite.Repositories\Elite.Repositories.csproj", "{90D0A58B-EE14-49BC-AAC2-5A958153C995}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elite.Repositories.EntityFramework", "Elite.Repositories.EntityFramework\Elite.Repositories.EntityFramework.csproj", "{66A9165B-1522-4B4F-97DB-EF9C14C48540}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elite.Repositories.Abstractions", "Elite.Repositories.Abstractions\Elite.Repositories.Abstractions.csproj", "{277B96D4-1331-45C4-9FE2-6069D05313B3}"
@@ -18,16 +16,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		..\.github\workflows\main.yml = ..\.github\workflows\main.yml
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elite.Repositories.Abstractions.Tests", "Elite.Repositories.Abstractions.Tests\Elite.Repositories.Abstractions.Tests.csproj", "{3695493C-802E-4AA2-95F4-18FCD9994466}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elite.Repositories.EntityFramework.Tests", "Elite.Repositories.EntityFramework.Tests\Elite.Repositories.EntityFramework.Tests.csproj", "{D3DB45B4-5ECD-4155-92F5-173F856D30C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{D4BE963B-BBB5-401A-BC2F-7A98B7A436A9}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{90D0A58B-EE14-49BC-AAC2-5A958153C995}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{90D0A58B-EE14-49BC-AAC2-5A958153C995}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{90D0A58B-EE14-49BC-AAC2-5A958153C995}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{90D0A58B-EE14-49BC-AAC2-5A958153C995}.Release|Any CPU.Build.0 = Release|Any CPU
 		{66A9165B-1522-4B4F-97DB-EF9C14C48540}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{66A9165B-1522-4B4F-97DB-EF9C14C48540}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66A9165B-1522-4B4F-97DB-EF9C14C48540}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -40,6 +43,14 @@ Global
 		{E7827560-E181-4BC0-B3FC-C54FB77BA5C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7827560-E181-4BC0-B3FC-C54FB77BA5C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7827560-E181-4BC0-B3FC-C54FB77BA5C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3695493C-802E-4AA2-95F4-18FCD9994466}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3695493C-802E-4AA2-95F4-18FCD9994466}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3695493C-802E-4AA2-95F4-18FCD9994466}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3695493C-802E-4AA2-95F4-18FCD9994466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3DB45B4-5ECD-4155-92F5-173F856D30C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3DB45B4-5ECD-4155-92F5-173F856D30C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3DB45B4-5ECD-4155-92F5-173F856D30C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3DB45B4-5ECD-4155-92F5-173F856D30C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

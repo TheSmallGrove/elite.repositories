@@ -12,7 +12,6 @@ namespace Elite.Repositories.EntityFramework
 {
     public abstract class EntityRepository<TEntity, TKey> : Repository<TEntity, TKey>
         where TEntity : class, IEntity
-        where TKey: ITuple
     {
         private DbContext Context { get; }
 
@@ -51,7 +50,7 @@ namespace Elite.Repositories.EntityFramework
             return this.Context.SaveChangesAsync(true);
         }
 
-        public override Task UpdateAsync(params TEntity [] entities)
+        public override Task UpdateAsync(params TEntity[] entities)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
@@ -87,6 +86,8 @@ namespace Elite.Repositories.EntityFramework
 
             return Task.CompletedTask;
         }
+
+        public override async Task<IEnumerable<TEntity>> GetAllAsync() => await this.Set.ToArrayAsync();
 
         protected override IQueryable<TEntity> Set => this.Context.Set<TEntity>();
     }
