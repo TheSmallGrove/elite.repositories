@@ -19,6 +19,10 @@ namespace TestWorker
                 .ToTable("Products")
                 .HasKey(_ => _.Id);
 
+            modelBuilder.Entity<Category>()
+                .ToTable("Categories")
+                .HasKey(_ => _.Id);
+
             base.OnModelCreating(modelBuilder);
         }
     }
