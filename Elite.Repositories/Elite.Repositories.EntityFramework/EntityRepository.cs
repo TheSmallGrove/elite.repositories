@@ -14,10 +14,12 @@ namespace Elite.Repositories.EntityFramework
         where TEntity : class, IEntity
     {
         private DbContext Context { get; }
+        private ICriteriaResolver CriteriaResolver { get; }
 
-        public EntityRepository(DbContext context)
+        public EntityRepository(DbContext context, ICriteriaResolver criteriaResolver = null)
         {
             this.Context = context;
+            this.CriteriaResolver = criteriaResolver ?? new NullCriteriaResolver();
         }
 
         public override async Task InsertAsync(TEntity entity)
@@ -85,6 +87,26 @@ namespace Elite.Repositories.EntityFramework
             }
 
             return Task.CompletedTask;
+        }
+
+        public override async Task<IEnumerable<TEntity>> GetByCriteria(IDictionary<string, dynamic> criterias)
+        {
+            var query = this.Set;
+            query = ApplyCriteria("sorting", criterias, query);
+            query = ApplyCriteria("paging", criterias, query);
+            return await query.ToArrayAsync();
+        }
+
+        private IQueryable<TEntity> ApplyCriteria(string name, IDictionary<string, dynamic> criterias, IQueryable<TEntity> query)
+        {
+            dynamic arguments;
+            if (criterias.TryGetValue(name, out arguments))
+            {
+                ICriteria criteria = this.CriteriaResolver.Resolve(name);
+                query = criteria.Apply(query, arguments);
+            }
+
+            return query;
         }
 
         public override async Task<IEnumerable<TEntity>> GetAllAsync() => await this.Set.ToArrayAsync();

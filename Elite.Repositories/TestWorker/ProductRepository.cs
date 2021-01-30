@@ -13,8 +13,8 @@ namespace TestWorker
 
     class ProductRepository : EntityRepository<Product, (string Id, string IdGroup)>, IProductRepository
     {
-        public ProductRepository(TestDbContext context) 
-            : base(context)
+        public ProductRepository(TestDbContext context, ICriteriaResolver criteriaResolver) 
+            : base(context, criteriaResolver)
         { }
 
         public override Task<Product> GetByKeyAsync((string Id, string IdGroup) key)

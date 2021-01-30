@@ -15,8 +15,8 @@ namespace TestWorker
 
     class CategoryRepository : EntityRepository<Category, int>, ICategoryRepository
     {
-        public CategoryRepository(TestDbContext context) 
-            : base(context)
+        public CategoryRepository(TestDbContext context, ICriteriaResolver criteriaResolver) 
+            : base(context, criteriaResolver)
         { }
 
         public override Task<Category> GetByKeyAsync(int key)
