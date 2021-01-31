@@ -1,14 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Elite.Repositories.Abstractions
 {
     public interface ICriteriaExecutor
-    { }
-
-    public interface ICriteriaExecutor<TCriteria> : ICriteriaExecutor
-        where TCriteria : ICriteria
     {
-        IQueryable<TEntity> Apply<TEntity>(IQueryable<TEntity> query, TCriteria arguments)
+        Type CriteriaType { get; }
+
+        IQueryable<TEntity> Apply<TEntity>(IQueryable<TEntity> query, ICriteria arguments)
             where TEntity : class, IEntity;
     }
 }

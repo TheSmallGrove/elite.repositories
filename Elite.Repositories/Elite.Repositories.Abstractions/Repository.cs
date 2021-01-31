@@ -18,7 +18,7 @@ namespace Elite.Repositories.Abstractions
         public abstract Task DeleteAsync(TEntity entity);
         public abstract Task DeleteAsync(params TEntity[] entities);
         public abstract Task DeleteByKeyAsync(TKey key);
-        public abstract Task<IEnumerable<TEntity>> GetByCriteria(params ICriteria[] criterias);
+        public abstract Task<IEnumerable<TEntity>> GetByCriteriaAsync(params ICriteria[] criterias);
         public abstract Task<IEnumerable<TEntity>> GetAllAsync();
         protected abstract IQueryable<TEntity> Set { get; }
     }

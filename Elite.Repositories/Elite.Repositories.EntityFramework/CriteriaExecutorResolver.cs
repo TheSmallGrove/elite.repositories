@@ -9,15 +9,8 @@ namespace Elite.Repositories.EntityFramework
 {
     class CriteriaExecutorResolver : ICriteriaExecutorResolver
     {
-        private IEnumerable<ICriteriaExecutor> Criterias { get; }
-
-        public CriteriaExecutorResolver(IEnumerable<ICriteriaExecutor> criterias)
-        {
-            this.Criterias = criterias;
-        }
-
-        public ICriteriaExecutor<T> Resolve<T>(string name)
-            where T: ICriteria => 
-            this.Criterias.OfType<ICriteriaExecutor<T>>().SingleOrDefault();
+        private IEnumerable<ICriteriaExecutor> Executors { get; }
+        public CriteriaExecutorResolver(IEnumerable<ICriteriaExecutor> criterias) => this.Executors = criterias;
+        public ICriteriaExecutor Resolve(Type criteriaType) => this.Executors.SingleOrDefault(_ => _.CriteriaType == criteriaType);
     }
 }

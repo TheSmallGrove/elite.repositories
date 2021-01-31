@@ -25,6 +25,7 @@ namespace Elite.Repositories.EntityFramework
                 .AddTransient<IUnitOfWork, EntityUnitOfWork<TContext>>(o => new EntityUnitOfWork<TContext>(o.CreateScope()));
 
             services
+                .AddTransient<ICriteriaExecutor, RestrictionCriteriaExecutor>()
                 .AddTransient<ICriteriaExecutor, PagingCriteriaExecutor>()
                 .AddTransient<ICriteriaExecutor, SortingCriteriaExecutor>()
                 .AddSingleton<ICriteriaExecutorResolver, CriteriaExecutorResolver>();

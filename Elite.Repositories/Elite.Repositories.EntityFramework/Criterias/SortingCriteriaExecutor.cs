@@ -8,13 +8,15 @@ using System.Threading.Tasks;
 
 namespace Elite.Repositories.EntityFramework.Criterias
 {
-    class SortingCriteriaExecutor : ICriteriaExecutor<SortingCriteria>
+    class SortingCriteriaExecutor : ICriteriaExecutor
     {
-        public string Name => "sorting";
+        public Type CriteriaType => typeof(SortingCriteria);
 
-        public IQueryable<TEntity> Apply<TEntity>(IQueryable<TEntity> query, SortingCriteria arguments)
+        public IQueryable<TEntity> Apply<TEntity>(IQueryable<TEntity> query, ICriteria criteria)
             where TEntity : class, IEntity
         {
+            SortingCriteria arguments = criteria as SortingCriteria;
+
             if (arguments.Properties.Any())
                 return query.OrderBy(string.Join(',', arguments.Properties));
 

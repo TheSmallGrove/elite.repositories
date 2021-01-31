@@ -7,7 +7,6 @@ namespace Elite.Repositories.Abstractions
 {
     public interface ICriteriaExecutorResolver
     {
-        ICriteriaExecutor<T> Resolve<T>(string name)
-            where T : ICriteria;
+        ICriteriaExecutor Resolve(Type criteriaType);
     }
 }

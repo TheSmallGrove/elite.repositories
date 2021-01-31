@@ -90,29 +90,20 @@ namespace Elite.Repositories.EntityFramework
             return Task.CompletedTask;
         }
 
-        public override async Task<IEnumerable<TEntity>> GetByCriteria(params ICriteria[] criterias)
+        public override async Task<IEnumerable<TEntity>> GetByCriteriaAsync(params ICriteria[] criterias)
         {
+            if (this.CriteriaResolver == null)
+                throw new InvalidOperationException("No resolver available for criteria translation");
+
             var query = this.Set;
-            query = ApplyCriteria<SortingCriteria>("sorting", criterias, query);
-            query = ApplyCriteria<PagingCriteria>("paging", criterias, query);
-            return await query.ToArrayAsync();
-        }
 
-        private IQueryable<TEntity> ApplyCriteria<TCriteria>(string name, IEnumerable<ICriteria> criterias, IQueryable<TEntity> query)
-            where TCriteria : ICriteria
-        {
-            if (this.CriteriaResolver != null)
+            foreach (var criteria in criterias)
             {
-                TCriteria arguments = criterias.OfType<TCriteria>().SingleOrDefault();
-
-                if (arguments != null)
-                {
-                    ICriteriaExecutor<TCriteria> criteria = this.CriteriaResolver.Resolve<TCriteria>(name);
-                    query = criteria.Apply(query, arguments);
-                }
+                var executor = this.CriteriaResolver.Resolve(criteria.GetType());
+                query = executor.Apply<TEntity>(query, criteria);
             }
 
-            return query;
+            return await query.ToArrayAsync();
         }
 
         public override async Task<IEnumerable<TEntity>> GetAllAsync() => await this.Set.ToArrayAsync();
