@@ -1,4 +1,5 @@
 using Elite.Repositories.Abstractions;
+using Elite.Repositories.EntityFramework.Criterias;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,26 +25,20 @@ namespace TestWorker
             using (var unitOfWork = this.Factory.BeginUnitOfWork())
             {
                 var products1 = unitOfWork.GetRepository<IProductRepository>();
-                var category1 = unitOfWork.GetRepository<ICategoryRepository>();
 
-                var test = await products1.GetByKeyAsync(("607", "aaa"));
-                var test1 = await category1.GetByKeyAsync(10);
-
-                using (var transaction = await unitOfWork.BeginTransaction())
+                try
                 {
-                    var products = unitOfWork.GetRepository<IProductRepository>();
+                    var test = await products1.GetByCriteria(
+                        new PagingCriteria{ PageIndex = 0, PageSize = 2 },
+                        new SortingCriteria { Properties = new string[] { "Name desc" } });
 
-                    await products.InsertAsync(new Product
-                    {
-                        Id = DateTime.Now.Millisecond.ToString(),
-                        IdGroup = "aaa",
-                        Name = "Prova"
-                    });
-                    
-                    await transaction.CompleteAsync();
+                    foreach(var i in test)
+                        Console.WriteLine(i);
                 }
-
-                var test2 = await products1.GetAllAsync();
+                catch(Exception)
+                {
+                    throw;
+                }
             }
 
             while (!stoppingToken.IsCancellationRequested)
@@ -64,7 +59,7 @@ namespace TestWorker
 
         public Task<IEnumerable<Category>> GetHomeCategories()
         {
-            using(var unitOfWork = this.Factory.BeginUnitOfWork())
+            using (var unitOfWork = this.Factory.BeginUnitOfWork())
             {
                 var categoryRepo = unitOfWork.GetRepository<ICategoryRepository>();
                 return categoryRepo.GetAllAsync();

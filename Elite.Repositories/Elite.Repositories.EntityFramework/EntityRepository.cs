@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using Elite.Repositories.EntityFramework.Criterias;
 
 namespace Elite.Repositories.EntityFramework
 {
@@ -14,12 +15,12 @@ namespace Elite.Repositories.EntityFramework
         where TEntity : class, IEntity
     {
         private DbContext Context { get; }
-        private ICriteriaResolver CriteriaResolver { get; }
+        private ICriteriaExecutorResolver CriteriaResolver { get; }
 
-        public EntityRepository(DbContext context, ICriteriaResolver criteriaResolver = null)
+        public EntityRepository(DbContext context, ICriteriaExecutorResolver criteriaResolver = null)
         {
             this.Context = context;
-            this.CriteriaResolver = criteriaResolver ?? new NullCriteriaResolver();
+            this.CriteriaResolver = criteriaResolver;
         }
 
         public override async Task InsertAsync(TEntity entity)
@@ -89,21 +90,26 @@ namespace Elite.Repositories.EntityFramework
             return Task.CompletedTask;
         }
 
-        public override async Task<IEnumerable<TEntity>> GetByCriteria(IDictionary<string, dynamic> criterias)
+        public override async Task<IEnumerable<TEntity>> GetByCriteria(params ICriteria[] criterias)
         {
             var query = this.Set;
-            query = ApplyCriteria("sorting", criterias, query);
-            query = ApplyCriteria("paging", criterias, query);
+            query = ApplyCriteria<SortingCriteria>("sorting", criterias, query);
+            query = ApplyCriteria<PagingCriteria>("paging", criterias, query);
             return await query.ToArrayAsync();
         }
 
-        private IQueryable<TEntity> ApplyCriteria(string name, IDictionary<string, dynamic> criterias, IQueryable<TEntity> query)
+        private IQueryable<TEntity> ApplyCriteria<TCriteria>(string name, IEnumerable<ICriteria> criterias, IQueryable<TEntity> query)
+            where TCriteria : ICriteria
         {
-            dynamic arguments;
-            if (criterias.TryGetValue(name, out arguments))
+            if (this.CriteriaResolver != null)
             {
-                ICriteria criteria = this.CriteriaResolver.Resolve(name);
-                query = criteria.Apply(query, arguments);
+                TCriteria arguments = criterias.OfType<TCriteria>().SingleOrDefault();
+
+                if (arguments != null)
+                {
+                    ICriteriaExecutor<TCriteria> criteria = this.CriteriaResolver.Resolve<TCriteria>(name);
+                    query = criteria.Apply(query, arguments);
+                }
             }
 
             return query;

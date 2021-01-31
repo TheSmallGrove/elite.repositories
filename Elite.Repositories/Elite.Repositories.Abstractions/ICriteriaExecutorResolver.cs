@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace Elite.Repositories.Abstractions
 {
-    public interface ICriteriaResolver
+    public interface ICriteriaExecutorResolver
     {
-        ICriteria Resolve(string name);
+        ICriteriaExecutor<T> Resolve<T>(string name)
+            where T : ICriteria;
     }
 }

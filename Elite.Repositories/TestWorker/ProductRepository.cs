@@ -13,7 +13,7 @@ namespace TestWorker
 
     class ProductRepository : EntityRepository<Product, (string Id, string IdGroup)>, IProductRepository
     {
-        public ProductRepository(TestDbContext context, ICriteriaResolver criteriaResolver) 
+        public ProductRepository(TestDbContext context, ICriteriaExecutorResolver criteriaResolver) 
             : base(context, criteriaResolver)
         { }
 

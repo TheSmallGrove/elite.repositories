@@ -15,7 +15,7 @@ namespace TestWorker
 
     class CategoryRepository : EntityRepository<Category, int>, ICategoryRepository
     {
-        public CategoryRepository(TestDbContext context, ICriteriaResolver criteriaResolver) 
+        public CategoryRepository(TestDbContext context, ICriteriaExecutorResolver criteriaResolver) 
             : base(context, criteriaResolver)
         { }
 
