@@ -132,3 +132,35 @@ After this you can implement the reposityr using a simple tuple syntax:
     {
         // ...
     }
+
+## Support for dynamic criterias
+
+One of the most common patterns in retriving data is using a tabular format that is usually sorted and paged. The repositories directly supports specifications of Criterias to be applied to an entity set to restrict, sort, page and project results. This enable to declaratively create a set of criteria and have them translated to entity framework query parameters.
+
+    var paging = new PagingCriteria { PageIndex = 0, PageSize = 25 };
+    var sorting = new SortingCriteria { Properties = new string[] { "Genre.Name asc" } };
+
+    using (var uow = factory.BeginUnitOfWork())
+    {
+        var tracks = uow.GetRepository<ITracksRepository>();
+        var set = await tracks.GetByCriteriaAsync("new (TrackId, Name, UnitPrice, Genre.Name as Genre)", sorting, paging);
+
+        foreach (var item in set)
+            Console.WriteLine($"{item.TrackId} | {item.Name} | {item.Genre} | {item.UnitPrice}");
+    }
+
+This simple example create a dynamic set that is a view of data coming from the base Track entity. The selection is paged by 25 records, sorted bay Name and the projection extract data from Track itself and also Genre related entity.
+
+You can also count recods in similar way using the CountByCriteriaAsync() method that converts a criteria expression and count resulting records. It is useful to have total count of rows coming from a restricted query.
+
+The Library provides also some utilities extension methods to easily calculate values from paged results
+
+    var paging = new PagingCriteria { PageIndex = 0, PageSize = 25 };
+    var count = await tracks.CountByCriteriaAsync();
+
+    for(var i=0; i<3; i++)
+    {
+        //  get rows with paging here...
+        PagingInfo info = paging.Calculate(count);
+        paging = info.GoToNext();
+    }

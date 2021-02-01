@@ -11,5 +11,6 @@ namespace TestConsole.Entities
     {
         public int GenreId { get; set; }
         public string Name { get; set; }
+        public ICollection<Track> Tracks => new List<Track>();
     }
 }

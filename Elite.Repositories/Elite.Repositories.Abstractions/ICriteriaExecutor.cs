@@ -7,7 +7,6 @@ namespace Elite.Repositories.Abstractions
     {
         Type CriteriaType { get; }
 
-        IQueryable<TEntity> Apply<TEntity>(IQueryable<TEntity> query, ICriteria arguments)
-            where TEntity : class, IEntity;
+        IQueryable Apply(IQueryable query, ICriteria criteria);
     }
 }

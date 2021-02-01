@@ -1,12 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Elite.Repositories.Abstractions;
+using Elite.Repositories.Abstractions.Criterias;
 using Elite.Repositories.EntityFramework;
 using System;
 using TestConsole.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Elite.Repositories.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
-using Elite.Repositories.EntityFramework.Criterias;
-using Elite.Repositories.Abstractions.Criterias;
+using TestConsole.Repositories;
 
 namespace TestConsole
 {

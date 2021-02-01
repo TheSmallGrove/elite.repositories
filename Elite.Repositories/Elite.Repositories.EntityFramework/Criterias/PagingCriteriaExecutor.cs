@@ -2,6 +2,7 @@
 using Elite.Repositories.Abstractions.Criterias;
 using System;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace Elite.Repositories.EntityFramework.Criterias
 {
@@ -9,8 +10,7 @@ namespace Elite.Repositories.EntityFramework.Criterias
     {
         public Type CriteriaType => typeof(PagingCriteria);
 
-        public IQueryable<TEntity> Apply<TEntity>(IQueryable<TEntity> query, ICriteria criteria)
-            where TEntity : class, IEntity
+        public IQueryable Apply(IQueryable query, ICriteria criteria)
         {
             PagingCriteria arguments = criteria as PagingCriteria;
             int pageSize = arguments.PageSize;
