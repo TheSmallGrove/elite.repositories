@@ -19,8 +19,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
-      NUGET_APIKEY: 'oy2e6lfsh2rt5wkbwsyqie5v4agffikexnzc6zg6v4z5a4'
-      NUGET_ENDPOINT: 'https://www.nuget.org/api/v2/package'
+      NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
+      NUGET_ENDPOINT: ${{ secrets.NUGET_SERVER }}
       
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

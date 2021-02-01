@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using Elite.Repositories.EntityFramework.Criterias;
 
 namespace Elite.Repositories.EntityFramework
 {
@@ -14,10 +16,12 @@ namespace Elite.Repositories.EntityFramework
         where TEntity : class, IEntity
     {
         private DbContext Context { get; }
+        private ICriteriaExecutorResolver CriteriaResolver { get; }
 
-        public EntityRepository(DbContext context)
+        public EntityRepository(DbContext context, ICriteriaExecutorResolver criteriaResolver = null)
         {
             this.Context = context;
+            this.CriteriaResolver = criteriaResolver;
         }
 
         public override async Task InsertAsync(TEntity entity)
@@ -85,6 +89,27 @@ namespace Elite.Repositories.EntityFramework
             }
 
             return Task.CompletedTask;
+        }
+
+        public override async Task<IEnumerable<dynamic>> GetByCriteriaAsync(string projection, params ICriteria[] criterias)
+        {
+            if (projection == null)
+                throw new ArgumentNullException(nameof(projection));
+            if (criterias == null)
+                throw new ArgumentNullException(nameof(criterias));
+
+            if (this.CriteriaResolver == null)
+                throw new InvalidOperationException("No resolver available for criteria translation");
+
+            var query = this.Set;
+
+            foreach (var criteria in criterias)
+            {
+                var executor = this.CriteriaResolver.Resolve(criteria.GetType());
+                query = executor.Apply<TEntity>(query, criteria);
+            }
+
+            return await query.Select(projection).ToDynamicArrayAsync();
         }
 
         public override async Task<IEnumerable<TEntity>> GetAllAsync() => await this.Set.ToArrayAsync();

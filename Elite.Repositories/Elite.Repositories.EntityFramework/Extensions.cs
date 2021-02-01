@@ -1,4 +1,5 @@
 ﻿using Elite.Repositories.Abstractions;
+using Elite.Repositories.EntityFramework.Criterias;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,9 +20,17 @@ namespace Elite.Repositories.EntityFramework
         {
             services.AddDbContext<TContext>(options => builder?.Invoke(options));
 
-            return services
+            services
                 .AddTransient<IUnitOfWorkFactory, EntityUnitOfWorkFactory>()
                 .AddTransient<IUnitOfWork, EntityUnitOfWork<TContext>>(o => new EntityUnitOfWork<TContext>(o.CreateScope()));
+
+            services
+                .AddTransient<ICriteriaExecutor, RestrictionCriteriaExecutor>()
+                .AddTransient<ICriteriaExecutor, PagingCriteriaExecutor>()
+                .AddTransient<ICriteriaExecutor, SortingCriteriaExecutor>()
+                .AddSingleton<ICriteriaExecutorResolver, CriteriaExecutorResolver>();
+
+            return services;
         }
 
         public static IServiceCollection AddRepository<TInterface, TClass>(this IServiceCollection services)
