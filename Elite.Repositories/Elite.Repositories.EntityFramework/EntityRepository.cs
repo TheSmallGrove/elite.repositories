@@ -98,6 +98,22 @@ namespace Elite.Repositories.EntityFramework
             if (criterias == null)
                 throw new ArgumentNullException(nameof(criterias));
 
+            return await this.CreateQueryFromCriteria(criterias)
+                .Select(projection).ToDynamicArrayAsync();
+        }
+
+        public override async Task<int> CountByCriteriaAsync(params ICriteria[] criterias)
+        {
+            if (criterias == null)
+                throw new ArgumentNullException(nameof(criterias));
+
+            return await this.CreateQueryFromCriteria(criterias)
+                .CountAsync();
+        }
+
+        private IQueryable<TEntity> CreateQueryFromCriteria(ICriteria[] criterias)
+        {
+
             if (this.CriteriaResolver == null)
                 throw new InvalidOperationException("No resolver available for criteria translation");
 
@@ -109,7 +125,7 @@ namespace Elite.Repositories.EntityFramework
                 query = executor.Apply<TEntity>(query, criteria);
             }
 
-            return await query.Select(projection).ToDynamicArrayAsync();
+            return query;
         }
 
         public override async Task<IEnumerable<TEntity>> GetAllAsync() => await this.Set.ToArrayAsync();
