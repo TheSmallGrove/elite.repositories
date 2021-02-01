@@ -1,4 +1,4 @@
-﻿using Elite.Repositories.Abstractions;
+using Elite.Repositories.Abstractions;
 using Elite.Repositories.Abstractions.Criterias;
 using Elite.Repositories.EntityFramework;
 using Microsoft.EntityFrameworkCore;
