@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using Elite.Repositories.EntityFramework.Criterias;
+using Microsoft.EntityFrameworkCore.DynamicLinq;
 
 namespace Elite.Repositories.EntityFramework
 {
@@ -107,22 +108,21 @@ namespace Elite.Repositories.EntityFramework
             if (criterias == null)
                 throw new ArgumentNullException(nameof(criterias));
 
-            return await this.CreateQueryFromCriteria(criterias)
-                .CountAsync();
+            return await this.CreateQueryFromCriteria(criterias).CountAsync();
         }
 
-        private IQueryable<TEntity> CreateQueryFromCriteria(ICriteria[] criterias)
+        private IQueryable CreateQueryFromCriteria(ICriteria[] criterias)
         {
 
             if (this.CriteriaResolver == null)
                 throw new InvalidOperationException("No resolver available for criteria translation");
 
-            var query = this.Set;
+            IQueryable query = this.Set;
 
             foreach (var criteria in criterias)
             {
                 var executor = this.CriteriaResolver.Resolve(criteria.GetType());
-                query = executor.Apply<TEntity>(query, criteria);
+                query = executor.Apply(query, criteria);
             }
 
             return query;
