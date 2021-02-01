@@ -20,6 +20,10 @@ namespace TestConsole.Repositories
                 .ToTable("tracks")
                 .HasKey(_ => _.TrackId);
 
+            modelBuilder.Entity<Genre>()
+                .ToTable("genres")
+                .HasKey(_ => _.GenreId);
+
             base.OnModelCreating(modelBuilder);
         }
 
