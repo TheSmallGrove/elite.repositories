@@ -1,12 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Elite.Repositories.EntityFramework;
-using System;
-using TestConsole.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Elite.Repositories.Abstractions;
-using System.Threading.Tasks;
-using Elite.Repositories.EntityFramework.Criterias;
+﻿using Elite.Repositories.Abstractions;
 using Elite.Repositories.Abstractions.Criterias;
+using Elite.Repositories.EntityFramework;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
+using TestConsole.Repositories;
 
 namespace TestConsole
 {
@@ -15,7 +14,7 @@ namespace TestConsole
         static async Task Main(string[] args)
         {
             IServiceCollection services = new ServiceCollection();
-
+            
             services.AddEntityRepository<ChinookDbContext>(
                 builder => builder.UseSqlite("Data Source=.\\chinook.db;"));
 
