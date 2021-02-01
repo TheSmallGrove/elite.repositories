@@ -1,6 +1,4 @@
-﻿using Elite.Repositories.Abstractions;
-
-namespace Elite.Repositories.EntityFramework.Criterias
+﻿namespace Elite.Repositories.Abstractions.Criterias
 {
     public class SortingCriteria : ICriteria
     {

@@ -20,6 +20,7 @@ namespace Elite.Repositories.Abstractions
         Task DeleteAsync(params TEntity[] entities);
         Task DeleteByKeyAsync(TKey key);
         Task<IEnumerable<dynamic>> GetByCriteriaAsync(string projection, params ICriteria [] criterias);
+        Task<int> CountByCriteriaAsync(params ICriteria [] criterias);
         Task<IEnumerable<TEntity>> GetAllAsync();
     }
 }
