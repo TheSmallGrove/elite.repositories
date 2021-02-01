@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -90,8 +91,13 @@ namespace Elite.Repositories.EntityFramework
             return Task.CompletedTask;
         }
 
-        public override async Task<IEnumerable<TEntity>> GetByCriteriaAsync(params ICriteria[] criterias)
+        public override async Task<IEnumerable<dynamic>> GetByCriteriaAsync(string projection, params ICriteria[] criterias)
         {
+            if (projection == null)
+                throw new ArgumentNullException(nameof(projection));
+            if (criterias == null)
+                throw new ArgumentNullException(nameof(criterias));
+
             if (this.CriteriaResolver == null)
                 throw new InvalidOperationException("No resolver available for criteria translation");
 
@@ -103,7 +109,7 @@ namespace Elite.Repositories.EntityFramework
                 query = executor.Apply<TEntity>(query, criteria);
             }
 
-            return await query.ToArrayAsync();
+            return await query.Select(projection).ToDynamicArrayAsync();
         }
 
         public override async Task<IEnumerable<TEntity>> GetAllAsync() => await this.Set.ToArrayAsync();

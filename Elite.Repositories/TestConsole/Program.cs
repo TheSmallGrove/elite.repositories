@@ -24,20 +24,20 @@ namespace TestConsole
             IServiceProvider provider = services.BuildServiceProvider();
 
             var factory = provider.GetRequiredService<IUnitOfWorkFactory>();
-            var paging = new PagingCriteria { PageIndex = 0, PageSize = 10 };
-            var sorting = new SortingCriteria { Properties = new string[] { "Name asc" } };
+            var paging = new PagingCriteria { PageIndex = 0, PageSize = 25 };
+            var sorting = new SortingCriteria { Properties = new string[] { "Genre.Name asc" } };
 
             while (true)
             {
                 using (var uow = factory.BeginUnitOfWork())
                 {
                     var tracks = uow.GetRepository<ITracksRepository>();
-                    var set = await tracks.GetByCriteriaAsync(sorting, paging);
+                    var set = await tracks.GetByCriteriaAsync("new (TrackId, Name, UnitPrice, Genre.Name as Genre)", sorting, paging);
 
                     Console.Clear();
 
                     foreach (var item in set)
-                        Console.WriteLine($"{item.TrackId.ToString().PadLeft(10)} | {item.Name.PadRight(100)} | {item.UnitPrice}");
+                        Console.WriteLine($"{item.TrackId.ToString().PadLeft(10)} | {item.Name.PadRight(100)} | {item.Genre.PadRight(20)} | {item.UnitPrice}");
                 }
 
                 var key = Console.ReadKey(true);
@@ -49,9 +49,9 @@ namespace TestConsole
                 else if (key.Key == ConsoleKey.RightArrow)
                     paging.PageIndex++;
                 else if (key.Key == ConsoleKey.UpArrow)
-                    sorting.Properties = new string[] { "Name asc" };
+                    sorting.Properties = new string[] { "Genre.Name asc" };
                 else if (key.Key == ConsoleKey.DownArrow)
-                    sorting.Properties = new string[] { "Name desc" };
+                    sorting.Properties = new string[] { "Genre.Name desc" };
             }
         }
     }
