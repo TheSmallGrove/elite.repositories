@@ -10,8 +10,7 @@ namespace Elite.Repositories.EntityFramework.Criterias
     {
         public Type CriteriaType => typeof(RestrictionCriteria);
 
-        public IQueryable<TEntity> Apply<TEntity>(IQueryable<TEntity> query, ICriteria criteria)
-            where TEntity : class, IEntity
+        public IQueryable Apply(IQueryable query, ICriteria criteria)
         {
             RestrictionCriteria arguments = criteria as RestrictionCriteria;
             return query.Where(arguments.RestrictionTemplate, arguments.Arguments);

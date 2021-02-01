@@ -13,8 +13,7 @@ namespace Elite.Repositories.EntityFramework.Criterias
     {
         public Type CriteriaType => typeof(SortingCriteria);
 
-        public IQueryable<TEntity> Apply<TEntity>(IQueryable<TEntity> query, ICriteria criteria)
-            where TEntity : class, IEntity
+        public IQueryable Apply(IQueryable query, ICriteria criteria)
         {
             SortingCriteria arguments = criteria as SortingCriteria;
 
