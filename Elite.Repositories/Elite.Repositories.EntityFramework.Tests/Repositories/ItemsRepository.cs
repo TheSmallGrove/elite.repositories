@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 namespace Elite.Repositories.EntityFramework.Tests.Repositories
 {
     public interface IItemsRepository : IRepository<Item, int>
-    { }
+    {
+        Task<IEnumerable<Item>> GetBatch(int min, int max);
+    }
 
     class ItemsRepository : EntityRepository<Item, int>, IItemsRepository
     {
@@ -29,6 +31,13 @@ namespace Elite.Repositories.EntityFramework.Tests.Repositories
         {
             var entity = await this.GetByKeyAsync(key);
             await base.DeleteAsync(entity);
+        }
+
+        public async Task<IEnumerable<Item>> GetBatch(int min, int max)
+        {
+            return await (from i in this.Set
+                          where i.Id >= min && i.Id <= max
+                          select i).ToArrayAsync();
         }
     }
 }
