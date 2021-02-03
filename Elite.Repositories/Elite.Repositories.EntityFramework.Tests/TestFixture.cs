@@ -46,7 +46,7 @@ namespace Elite.Repositories.EntityFramework.Tests
 
             internal async Task Load(int count = 0)
             {
-                var file = new FileInfo($"{Environment.CurrentDirectory}\\names.json");
+                var file = new FileInfo(Path.Combine($"{Environment.CurrentDirectory}", "names.json"));
                 var json = File.ReadAllText(file.FullName);
                 var names = (IEnumerable<string>)JsonSerializer.Deserialize<string[]>(json);
                 var data = new List<Stack<string>>();
