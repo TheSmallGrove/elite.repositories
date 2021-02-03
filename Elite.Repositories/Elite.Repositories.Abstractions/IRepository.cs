@@ -22,5 +22,6 @@ namespace Elite.Repositories.Abstractions
         Task<IEnumerable<dynamic>> GetByCriteriaAsync(string projection, params ICriteria [] criterias);
         Task<int> CountByCriteriaAsync(params ICriteria [] criterias);
         Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<int> CountAllAsync();
     }
 }

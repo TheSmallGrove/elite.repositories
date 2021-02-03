@@ -26,6 +26,5 @@ namespace TestConsole.Repositories
 
             base.OnModelCreating(modelBuilder);
         }
-
     }
 }

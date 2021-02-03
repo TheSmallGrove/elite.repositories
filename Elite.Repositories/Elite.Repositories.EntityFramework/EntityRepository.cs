@@ -130,6 +130,8 @@ namespace Elite.Repositories.EntityFramework
 
         public override async Task<IEnumerable<TEntity>> GetAllAsync() => await this.Set.ToArrayAsync();
 
+        public override async Task<int> CountAllAsync() => await this.Set.CountAsync();
+
         protected override IQueryable<TEntity> Set => this.Context.Set<TEntity>();
     }
 }
