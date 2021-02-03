@@ -3,12 +3,9 @@ using Elite.Repositories.Abstractions.Criterias;
 using Elite.Repositories.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Elite.Repositories.EntityFramework;
 using System;
-using TestConsole.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
+using TestConsole.Repositories;
 
 namespace TestConsole
 {
