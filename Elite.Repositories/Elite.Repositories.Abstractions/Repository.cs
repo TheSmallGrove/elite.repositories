@@ -21,6 +21,7 @@ namespace Elite.Repositories.Abstractions
         public abstract Task<IEnumerable<dynamic>> GetByCriteriaAsync(string projection, params ICriteria[] criterias);
         public abstract Task<int> CountByCriteriaAsync(params ICriteria[] criterias);
         public abstract Task<IEnumerable<TEntity>> GetAllAsync();
+        public abstract Task<int> CountAllAsync();
         protected abstract IQueryable<TEntity> Set { get; }
     }
 }
