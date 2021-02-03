@@ -13,30 +13,23 @@ using Elite.Repositories.EntityFramework.Tests.Entities;
 
 namespace Elite.Repositories.EntityFramework.Tests
 {
-    public class EntityRepositoryTests : IClassFixture<TestFixture>
+    public partial class EntityRepositoryTests : IClassFixture<TestFixture>
     {
-        public TestFixture Fixture { get; set; }
-
-        public EntityRepositoryTests(TestFixture fixture)
-        {
-            this.Fixture = fixture;
-        }
-
         [Fact]
-        public async Task GetByKeyAsync_Should_Return_Exact_Match()
+        public async Task SingleKey_GetByKeyAsync_Should_Return_Exact_Match()
         {
-            using (var data = await this.Fixture.Setup(100))
+            using (var data = await this.Fixture.SetupSingleKey(100))
             {
                 // ARRANGE
-                var container = this.BuildServiceProvider(data);
+                var container = TestUtilities.BuildServiceProvider(data);
                 var factory = container.GetRequiredService<IUnitOfWorkFactory>();
 
                 // ACT
-                Item item;
+                SingleKeyItem item;
 
                 using (var uow = factory.BeginUnitOfWork())
                 {
-                    var items = uow.GetRepository<IItemsRepository>();
+                    var items = uow.GetRepository<ISingleKeyItemsRepository>();
                     item = await items.GetByKeyAsync(50);
                 }
 
@@ -50,48 +43,23 @@ namespace Elite.Repositories.EntityFramework.Tests
         }
 
         [Fact]
-        public async Task CountAllAsync_Should_Return_Exact_Number_Of_Items()
+        public async Task SingleKey_DeleteByKeyAsync_Should_Delete_The_Record()
         {
             int count = 100;
 
-            using (var data = await this.Fixture.Setup(count))
+            using (var data = await this.Fixture.SetupSingleKey(count))
             {
                 // ARRANGE
-                var container = this.BuildServiceProvider(data);
-                var factory = container.GetRequiredService<IUnitOfWorkFactory>();
-
-                // ACT
-                int countResult;
-
-                using (var uow = factory.BeginUnitOfWork())
-                {
-                    var items = uow.GetRepository<IItemsRepository>();
-                    countResult = await items.CountAllAsync();
-                }
-
-                // ASSERT
-                countResult.Should().Be(count);
-            }
-        }
-
-        [Fact]
-        public async Task DeleteByKeyAsync_Should_Delete_The_Record()
-        {
-            int count = 100;
-
-            using (var data = await this.Fixture.Setup(count))
-            {
-                // ARRANGE
-                var container = this.BuildServiceProvider(data);
+                var container = TestUtilities.BuildServiceProvider(data);
                 var factory = container.GetRequiredService<IUnitOfWorkFactory>();
 
                 // ACT
                 int countAfterDelete;
-                Item found;
+                SingleKeyItem found;
 
                 using (var uow = factory.BeginUnitOfWork())
                 {
-                    var items = uow.GetRepository<IItemsRepository>();
+                    var items = uow.GetRepository<ISingleKeyItemsRepository>();
                     await items.DeleteByKeyAsync(50);
                     countAfterDelete = await items.CountAllAsync();
                     found = await items.GetByKeyAsync(50);
@@ -104,23 +72,23 @@ namespace Elite.Repositories.EntityFramework.Tests
         }
 
         [Fact]
-        public async Task DeleteAsync_Should_Delete_The_Record()
+        public async Task SingleKey_DeleteAsync_Should_Delete_The_Record()
         {
             int count = 100;
 
-            using (var data = await this.Fixture.Setup(count))
+            using (var data = await this.Fixture.SetupSingleKey(count))
             {
                 // ARRANGE
-                var container = this.BuildServiceProvider(data);
+                var container = TestUtilities.BuildServiceProvider(data);
                 var factory = container.GetRequiredService<IUnitOfWorkFactory>();
 
                 // ACT
                 int countAfterDelete;
-                Item found;
+                SingleKeyItem found;
 
                 using (var uow = factory.BeginUnitOfWork())
                 {
-                    var items = uow.GetRepository<IItemsRepository>();
+                    var items = uow.GetRepository<ISingleKeyItemsRepository>();
                     var temp = await items.GetByKeyAsync(50);
                     await items.DeleteAsync(temp);
                     countAfterDelete = await items.CountAllAsync();
@@ -134,23 +102,23 @@ namespace Elite.Repositories.EntityFramework.Tests
         }
 
         [Fact]
-        public async Task DeleteAsync_Should_Delete_A_Batch()
+        public async Task SingleKey_DeleteAsync_Should_Delete_A_Batch()
         {
             int count = 100;
 
-            using (var data = await this.Fixture.Setup(count))
+            using (var data = await this.Fixture.SetupSingleKey(count))
             {
                 // ARRANGE
-                var container = this.BuildServiceProvider(data);
+                var container = TestUtilities.BuildServiceProvider(data);
                 var factory = container.GetRequiredService<IUnitOfWorkFactory>();
 
                 // ACT
                 int countAfterDelete;
-                IEnumerable<Item> batchBeforeDelete, batchAfterDelete;
+                IEnumerable<SingleKeyItem> batchBeforeDelete, batchAfterDelete;
 
                 using (var uow = factory.BeginUnitOfWork())
                 {
-                    var items = uow.GetRepository<IItemsRepository>();
+                    var items = uow.GetRepository<ISingleKeyItemsRepository>();
                     batchBeforeDelete = await items.GetBatch(50, 69);
                     await items.DeleteAsync(batchBeforeDelete.ToArray());
                     countAfterDelete = await items.CountAllAsync();
@@ -164,20 +132,20 @@ namespace Elite.Repositories.EntityFramework.Tests
         }
 
         [Fact]
-        public async Task InsertAsync_Should_Add_A_Record()
+        public async Task SingleKey_InsertAsync_Should_Add_A_Record()
         {
             int count = 100;
 
-            using (var data = await this.Fixture.Setup(count))
+            using (var data = await this.Fixture.SetupSingleKey(count))
             {
                 // ARRANGE
-                var container = this.BuildServiceProvider(data);
+                var container = TestUtilities.BuildServiceProvider(data);
                 var factory = container.GetRequiredService<IUnitOfWorkFactory>();
 
                 // ACT
                 int countAfterInsert;
-                Item found;
-                Item newItem = new Item
+                SingleKeyItem found;
+                SingleKeyItem newItem = new SingleKeyItem
                 {
                     Id = 1000,
                     Letter = "Z",
@@ -187,7 +155,7 @@ namespace Elite.Repositories.EntityFramework.Tests
 
                 using (var uow = factory.BeginUnitOfWork())
                 {
-                    var items = uow.GetRepository<IItemsRepository>();
+                    var items = uow.GetRepository<ISingleKeyItemsRepository>();
                     await items.InsertAsync(newItem);
                     countAfterInsert = await items.CountAllAsync();
                     found = await items.GetByKeyAsync(newItem.Id);
@@ -204,21 +172,21 @@ namespace Elite.Repositories.EntityFramework.Tests
         }
 
         [Fact]
-        public async Task InsertAsync_Should_Add_A_Batch()
+        public async Task SingleKey_InsertAsync_Should_Add_A_Batch()
         {
             int count = 100;
 
-            using (var data = await this.Fixture.Setup(count))
+            using (var data = await this.Fixture.SetupSingleKey(count))
             {
                 // ARRANGE
-                var container = this.BuildServiceProvider(data);
+                var container = TestUtilities.BuildServiceProvider(data);
                 var factory = container.GetRequiredService<IUnitOfWorkFactory>();
                 
                 int countAfterInsert;
 
-                IEnumerable<Item> batchToInsert =
+                IEnumerable<SingleKeyItem> batchToInsert =
                     (from i in Enumerable.Range(1000, 20)
-                     select new Item
+                     select new SingleKeyItem
                      {
                          Id = i,
                          Letter = "X",
@@ -226,13 +194,13 @@ namespace Elite.Repositories.EntityFramework.Tests
                          Size = 0
                      }).ToArray();
 
-                IEnumerable<Item> batchAfterInsert;
+                IEnumerable<SingleKeyItem> batchAfterInsert;
 
                 // ACT
 
                 using (var uow = factory.BeginUnitOfWork())
                 {
-                    var items = uow.GetRepository<IItemsRepository>();
+                    var items = uow.GetRepository<ISingleKeyItemsRepository>();
                     await items.InsertAsync(batchToInsert.ToArray());
                     countAfterInsert = await items.CountAllAsync();
                     batchAfterInsert = await items.GetBatch(1000, 1019);
@@ -245,23 +213,23 @@ namespace Elite.Repositories.EntityFramework.Tests
         }
 
         [Fact]
-        public async Task UpdateAsync_Should_Change_A_Record()
+        public async Task SingleKey_UpdateAsync_Should_Change_A_Record()
         {
             int count = 100;
 
-            using (var data = await this.Fixture.Setup(count))
+            using (var data = await this.Fixture.SetupSingleKey(count))
             {
                 // ARRANGE
-                var container = this.BuildServiceProvider(data);
+                var container = TestUtilities.BuildServiceProvider(data);
                 var factory = container.GetRequiredService<IUnitOfWorkFactory>();
 
                 // ACT
                 int countAfterUpdate;
-                Item found, oldItem;
+                SingleKeyItem found, oldItem;
 
                 using (var uow = factory.BeginUnitOfWork())
                 {
-                    var items = uow.GetRepository<IItemsRepository>();
+                    var items = uow.GetRepository<ISingleKeyItemsRepository>();
 
                     oldItem = await items.GetByKeyAsync(50);
                     oldItem.Name = "DUMMY";
@@ -284,25 +252,25 @@ namespace Elite.Repositories.EntityFramework.Tests
         }
 
         [Fact]
-        public async Task UpdateAsync_Should_Update_A_Batch()
+        public async Task SingleKey_UpdateAsync_Should_Update_A_Batch()
         {
             int count = 100;
 
-            using (var data = await this.Fixture.Setup(count))
+            using (var data = await this.Fixture.SetupSingleKey(count))
             {
                 // ARRANGE
-                var container = this.BuildServiceProvider(data);
+                var container = TestUtilities.BuildServiceProvider(data);
                 var factory = container.GetRequiredService<IUnitOfWorkFactory>();
 
                 int countAfterUpdate;
 
-                IEnumerable<Item> batchToUpdate, batchAfterUpdate;
+                IEnumerable<SingleKeyItem> batchToUpdate, batchAfterUpdate;
 
                 // ACT
 
                 using (var uow = factory.BeginUnitOfWork())
                 {
-                    var items = uow.GetRepository<IItemsRepository>();
+                    var items = uow.GetRepository<ISingleKeyItemsRepository>();
                     batchToUpdate = await items.GetBatch(50, 69);
 
                     foreach (var item in batchToUpdate)
@@ -319,110 +287,6 @@ namespace Elite.Repositories.EntityFramework.Tests
                 countAfterUpdate.Should().Be(count);
                 batchAfterUpdate.Should().BeEquivalentTo(batchToUpdate);
             }
-        }
-
-        [Fact]
-        public async Task CompleteAsync_Should_Commit_Changes()
-        {
-            int count = 100;
-
-            using (var data = await this.Fixture.Setup(count))
-            {
-                // ARRANGE
-                var container = this.BuildServiceProvider(data);
-                var factory = container.GetRequiredService<IUnitOfWorkFactory>();
-
-                // ACT
-                int countAfterInsert, countAfterCommit;
-                Item found;
-                Item newItem = new Item
-                {
-                    Id = 1000,
-                    Letter = "Z",
-                    Name = "Zelda",
-                    Size = 5
-                };
-
-                using (var uow = factory.BeginUnitOfWork())
-                {
-                    var items = uow.GetRepository<IItemsRepository>();
-
-                    using (var transaction = await uow.BeginTransaction())
-                    {
-                        await items.InsertAsync(newItem);
-                        countAfterInsert = await items.CountAllAsync();
-                        await transaction.CompleteAsync();
-                    }
-
-                    countAfterCommit = await items.CountAllAsync();
-                    found = await items.GetByKeyAsync(newItem.Id);
-                }
-
-                // ASSERT
-                countAfterInsert.Should().Be(count + 1);
-                countAfterCommit.Should().Be(count + 1);
-                found.Should().NotBeNull();
-                found.Id.Should().Equals(newItem.Id);
-                found.Name.Should().Equals(newItem.Name);
-                found.Letter.Should().Equals(newItem.Letter);
-                found.Size.Should().Equals(newItem.Size);
-            }
-        }
-
-        [Fact]
-        public async Task Dispose_Should_Rollback_Changes()
-        {
-            int count = 100;
-
-            using (var data = await this.Fixture.Setup(count))
-            {
-                // ARRANGE
-                var container = this.BuildServiceProvider(data);
-                var factory = container.GetRequiredService<IUnitOfWorkFactory>();
-
-                // ACT
-                int countAfterInsert, countAfterCommit;
-                Item found;
-                Item newItem = new Item
-                {
-                    Id = 1000,
-                    Letter = "Z",
-                    Name = "Zelda",
-                    Size = 5
-                };
-
-                using (var uow = factory.BeginUnitOfWork())
-                {
-                    var items = uow.GetRepository<IItemsRepository>();
-
-                    using (var transaction = await uow.BeginTransaction())
-                    {
-                        await items.InsertAsync(newItem);
-                        countAfterInsert = await items.CountAllAsync();
-                    }
-
-                    countAfterCommit = await items.CountAllAsync();
-                    found = await items.GetByKeyAsync(newItem.Id);
-                }
-
-                // ASSERT
-                countAfterInsert.Should().Be(count + 1);
-                countAfterCommit.Should().Be(count);
-                found.Should().BeNull();
-            }
-        }
-
-        private IServiceProvider BuildServiceProvider(TestFixture.IDatabaseSetup data)
-        {
-            IServiceCollection services = new ServiceCollection();
-
-            services.AddEntityRepository<NamesDbContext>(
-                builder => builder.UseSqlite(data.ConnectionString));
-
-            services
-                .AddRepository<IItemsRepository, ItemsRepository>();
-
-            return services.BuildServiceProvider();
         }
     }
 }

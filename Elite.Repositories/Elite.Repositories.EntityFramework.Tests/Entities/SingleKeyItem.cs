@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Elite.Repositories.EntityFramework.Tests.Entities
 {
-    public class Item : IEntity
+    public class SingleKeyItem : IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

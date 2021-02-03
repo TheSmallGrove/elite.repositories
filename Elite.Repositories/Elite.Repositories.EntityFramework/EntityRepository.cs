@@ -25,6 +25,37 @@ namespace Elite.Repositories.EntityFramework
             this.CriteriaResolver = criteriaResolver;
         }
 
+        protected abstract Expression<Func<TEntity, bool>> MatchKey(TKey key);
+        protected abstract Expression<Func<TEntity, bool>> MatchKeys(params TKey[] keys);
+
+        public override async Task<TEntity> GetByKeyAsync(TKey key)
+        {
+            return await this.Set
+                .Where(this.MatchKey(key))
+                .Select(e => e)
+                .SingleOrDefaultAsync();                
+        }
+
+        public override async Task<TEntity> GetByKeyAsync(params TKey[] keys)
+        {
+            return await this.Set
+                .Where(this.MatchKeys(keys))
+                .Select(e => e)
+                .SingleOrDefaultAsync();
+        }
+
+        public override async Task DeleteByKeyAsync(TKey key)
+        {
+            var entity = await this.GetByKeyAsync(key);
+            await this.DeleteAsync(entity);
+        }
+
+        public override async Task DeleteByKeyAsync(params TKey[] keys)
+        {
+            var entity = await this.GetByKeyAsync(keys);
+            await this.DeleteAsync(entity);
+        }
+
         public override async Task InsertAsync(TEntity entity)
         {
             if (entity == null)
