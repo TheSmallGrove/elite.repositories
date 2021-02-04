@@ -24,8 +24,9 @@ namespace Elite.Repositories.EntityFramework.Tests.Repositories
         protected override Expression<Func<MultiKeyItem, bool>> MatchKey((int Id, int GroupId) key)
             => _ => _.Id == key.Id && _.GroupId == key.GroupId;
 
+        // TODO: this needs to be improved because at the moment conversion to string is the only way to make it work.
         protected override Expression<Func<MultiKeyItem, bool>> MatchKeys(params (int Id, int GroupId)[] keys)
-            => _ => keys.Select(o => o.Id).Contains(_.Id) && keys.Select(o => o.GroupId).Contains(_.GroupId); // todo: improve here
+            =>  o => keys.Select(k => $"({k.Id})-({k.GroupId})").Contains(("(" + o.Id + ")-(" + o.GroupId + ")") ?? "");
 
         public async Task<IEnumerable<MultiKeyItem>> GetBatch(int min, int max, int groupId)
         {
