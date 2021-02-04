@@ -45,12 +45,12 @@ namespace Elite.Repositories.EntityFramework
                 .SingleOrDefaultAsync();                
         }
 
-        public override async Task<TEntity> GetByKeyAsync(params TKey[] keys)
+        public override async Task<IEnumerable<TEntity>> GetByKeyAsync(params TKey[] keys)
         {
             return await this.Set
                 .Where(this.MatchKeys(keys))
                 .Select(e => e)
-                .SingleOrDefaultAsync();
+                .ToArrayAsync();
         }
 
         public override async Task DeleteByKeyAsync(TKey key)
@@ -61,8 +61,8 @@ namespace Elite.Repositories.EntityFramework
 
         public override async Task DeleteByKeyAsync(params TKey[] keys)
         {
-            var entity = await this.GetByKeyAsync(keys);
-            await this.DeleteAsync(entity);
+            var entities = await this.GetByKeyAsync(keys);
+            await this.DeleteAsync(entities.ToArray());
         }
 
         public override async Task InsertAsync(TEntity entity)

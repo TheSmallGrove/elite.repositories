@@ -25,7 +25,7 @@ namespace Elite.Repositories.EntityFramework.Tests.Repositories
             => _ => _.Id == key.Id && _.GroupId == key.GroupId;
 
         protected override Expression<Func<MultiKeyItem, bool>> MatchKeys(params (int Id, int GroupId)[] keys)
-            => _ => keys.Contains(new ValueTuple<int, int>(_.Id, _.GroupId));
+            => _ => keys.Select(o => o.Id).Contains(_.Id) && keys.Select(o => o.GroupId).Contains(_.GroupId); // todo: improve here
 
         public async Task<IEnumerable<MultiKeyItem>> GetBatch(int min, int max, int groupId)
         {

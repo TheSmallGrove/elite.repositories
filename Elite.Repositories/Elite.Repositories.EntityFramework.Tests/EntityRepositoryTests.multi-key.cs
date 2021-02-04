@@ -88,6 +88,36 @@ namespace Elite.Repositories.EntityFramework.Tests
         }
 
         [Fact]
+        public async Task MultiKey_GetByKeyAsync_Should_Return_Exact_Match_With_Many_Items()
+        {
+            using (var data = await this.Fixture.SetupMultiKey(100))
+            {
+                // ARRANGE
+                var container = TestUtilities.BuildServiceProvider(data);
+                var factory = container.GetRequiredService<IUnitOfWorkFactory>();
+
+                // ACT
+                IEnumerable<MultiKeyItem> item;
+                (int, int)[] keys = { (50, 1), (60, 1), (70, 1) };
+
+                using (var uow = factory.BeginUnitOfWork())
+                {
+                    var items = uow.GetRepository<IMultiKeyItemsRepository>();
+                    item = await items.GetByKeyAsync(keys);
+                }
+
+                // ASSERT
+                item.Should().HaveCount(keys.Length);
+                item.ElementAt(0).Id.Should().Be(keys[0].Item1);
+                item.ElementAt(0).GroupId.Should().Be(keys[0].Item2);
+                item.ElementAt(1).Id.Should().Be(keys[1].Item1);
+                item.ElementAt(1).GroupId.Should().Be(keys[1].Item2);
+                item.ElementAt(2).Id.Should().Be(keys[2].Item1);
+                item.ElementAt(2).GroupId.Should().Be(keys[2].Item2);
+            }
+        }
+
+        [Fact]
         public async Task MultiKey_DeleteByKeyAsync_Should_Delete_The_Record()
         {
             int count = 100;

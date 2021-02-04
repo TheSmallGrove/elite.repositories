@@ -13,7 +13,7 @@ namespace Elite.Repositories.Abstractions
     {
         Task<bool> ExistsByKeyAsync(TKey key);
         Task<TEntity> GetByKeyAsync(TKey key);
-        Task<TEntity> GetByKeyAsync(params TKey[] key);
+        Task<IEnumerable<TEntity>> GetByKeyAsync(params TKey[] key);
         Task InsertAsync(TEntity entity);
         Task InsertAsync(params TEntity[] entities);
         Task UpdateAsync(TEntity entity);
