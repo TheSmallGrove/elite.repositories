@@ -11,6 +11,7 @@ namespace Elite.Repositories.Abstractions
     public interface IRepository<TEntity, TKey> : IRepository
         where TEntity : class, IEntity
     {
+        Task<bool> ExistsByKeyAsync(TKey key);
         Task<TEntity> GetByKeyAsync(TKey key);
         Task<TEntity> GetByKeyAsync(params TKey[] key);
         Task InsertAsync(TEntity entity);

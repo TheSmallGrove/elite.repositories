@@ -26,7 +26,16 @@ namespace Elite.Repositories.EntityFramework
         }
 
         protected abstract Expression<Func<TEntity, bool>> MatchKey(TKey key);
+
         protected abstract Expression<Func<TEntity, bool>> MatchKeys(params TKey[] keys);
+
+        public override async Task<bool> ExistsByKeyAsync(TKey key)
+        {
+            return await this.Set
+                .Where(this.MatchKey(key))
+                .Select(e => e)
+                .AnyAsync();
+        }
 
         public override async Task<TEntity> GetByKeyAsync(TKey key)
         {
