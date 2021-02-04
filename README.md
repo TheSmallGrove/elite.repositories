@@ -17,6 +17,9 @@ To build the data layer, as the pattern suggests, you have to create a repositor
 
 The entity has to implement "IEntity" to enforce the constraints on the IRepository<T, K> interface. After this step you have to create the repository as the following example:
 
+[NOTE] There is now a breaking change in release 1.1 because of a semplification in design that enable other feature and remove the need to manually write GetByKeyAsync and DeleteByKeyAsync
+
+
     public interface ICategoryRepository : IRepository<Category, int>
     {
         Task<Category> GetByName(string name);
@@ -28,18 +31,15 @@ The entity has to implement "IEntity" to enforce the constraints on the IReposit
             : base(context)
         { }
 
-        public override Task<Category> GetByKeyAsync(int key)
-        {
-            return (from entity in this.Set
-                    where entity.Id == key 
-                    select entity).SingleOrDefaultAsync();
-        }
+        // THIS IS CHANGED FROM 1.0 to 1.1 -------------------------------------------
 
-        public override async Task DeleteByKeyAsync(int key)
-        {
-            var entity = await this.GetByKeyAsync(key);
-            await base.DeleteAsync(entity);
-        }
+        protected override Expression<Func<Track, bool>> MatchKey(int key) 
+            => _ => _.TrackId == key;
+
+        protected override Expression<Func<Track, bool>> MatchKeys(params int[] keys)
+            => _ => keys.Contains(_.TrackId);
+
+        // ---------------------------------------------------------------------------
 
         public Task<Category> GetByName(string name)
         {
