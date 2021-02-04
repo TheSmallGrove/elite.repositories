@@ -16,6 +16,52 @@ namespace Elite.Repositories.EntityFramework.Tests
     public partial class EntityRepositoryTests : IClassFixture<TestFixture>
     {
         [Fact]
+        public async Task SingleKey_ExistsByKeyAsync_Should_Return_True_If_Match()
+        {
+            using (var data = await this.Fixture.SetupSingleKey(100))
+            {
+                // ARRANGE
+                var container = TestUtilities.BuildServiceProvider(data);
+                var factory = container.GetRequiredService<IUnitOfWorkFactory>();
+
+                // ACT
+                bool exists;
+
+                using (var uow = factory.BeginUnitOfWork())
+                {
+                    var items = uow.GetRepository<ISingleKeyItemsRepository>();
+                    exists  = await items.ExistsByKeyAsync(50);
+                }
+
+                // ASSERT
+                exists.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async Task SingleKey_ExistsByKeyAsync_Should_Return_False_If_Match()
+        {
+            using (var data = await this.Fixture.SetupSingleKey(100))
+            {
+                // ARRANGE
+                var container = TestUtilities.BuildServiceProvider(data);
+                var factory = container.GetRequiredService<IUnitOfWorkFactory>();
+
+                // ACT
+                bool exists;
+
+                using (var uow = factory.BeginUnitOfWork())
+                {
+                    var items = uow.GetRepository<ISingleKeyItemsRepository>();
+                    exists = await items.ExistsByKeyAsync(5000);
+                }
+
+                // ASSERT
+                exists.Should().BeFalse();
+            }
+        }
+
+        [Fact]
         public async Task SingleKey_GetByKeyAsync_Should_Return_Exact_Match()
         {
             using (var data = await this.Fixture.SetupSingleKey(100))
@@ -39,6 +85,33 @@ namespace Elite.Repositories.EntityFramework.Tests
                 item.Letter.Should().Be("X");
                 item.Name.Should().Be("Xylia");
                 item.Size.Should().Be(5);
+            }
+        }
+
+        [Fact]
+        public async Task SingleKey_GetByKeyAsync_Should_Return_Exact_Match_With_Many_Items()
+        {
+            using (var data = await this.Fixture.SetupSingleKey(100))
+            {
+                // ARRANGE
+                var container = TestUtilities.BuildServiceProvider(data);
+                var factory = container.GetRequiredService<IUnitOfWorkFactory>();
+
+                // ACT
+                IEnumerable<SingleKeyItem> item;
+                int[] keys = { 50, 60, 70 };
+
+                using (var uow = factory.BeginUnitOfWork())
+                {
+                    var items = uow.GetRepository<ISingleKeyItemsRepository>();
+                    item = await items.GetByKeyAsync(keys);
+                }
+
+                // ASSERT
+                item.Should().HaveCount(keys.Length);
+                item.ElementAt(0).Id.Should().Be(keys[0]);
+                item.ElementAt(1).Id.Should().Be(keys[1]);
+                item.ElementAt(2).Id.Should().Be(keys[2]);
             }
         }
 

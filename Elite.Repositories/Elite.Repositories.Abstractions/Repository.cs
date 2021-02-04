@@ -10,8 +10,9 @@ namespace Elite.Repositories.Abstractions
     public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
         where TEntity : class, IEntity
     {
+        public abstract Task<bool> ExistsByKeyAsync(TKey key);
         public abstract Task<TEntity> GetByKeyAsync(TKey key);
-        public abstract Task<TEntity> GetByKeyAsync(params TKey[] key);
+        public abstract Task<IEnumerable<TEntity>> GetByKeyAsync(params TKey[] key);
         public abstract Task InsertAsync(TEntity entity);
         public abstract Task InsertAsync(params TEntity[] entities);
         public abstract Task UpdateAsync(TEntity entity);
