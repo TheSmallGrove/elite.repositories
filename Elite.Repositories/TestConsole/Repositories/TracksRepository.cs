@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TestConsole.Entities;
+using System.Linq.Expressions;
 
 namespace TestConsole.Repositories
 {
@@ -19,17 +20,10 @@ namespace TestConsole.Repositories
             : base(context, criteriaResolver)
         { }
 
-        public override Task<Track> GetByKeyAsync(int key)
-        {
-            return (from entity in this.Set
-                    where entity.TrackId == key
-                    select entity).SingleOrDefaultAsync();
-        }
+        protected override Expression<Func<Track, bool>> MatchKey(int key) 
+            => _ => _.TrackId == key;
 
-        public override async Task DeleteByKeyAsync(int key)
-        {
-            var entity = await this.GetByKeyAsync(key);
-            await base.DeleteAsync(entity);
-        }
+        protected override Expression<Func<Track, bool>> MatchKeys(params int[] keys)
+            => _ => keys.Contains(_.TrackId);
     }
 }

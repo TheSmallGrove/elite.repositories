@@ -16,8 +16,12 @@ namespace Elite.Repositories.EntityFramework.Tests.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Item>()
-                .ToTable("names")
+            modelBuilder.Entity<SingleKeyItem>()
+                .ToTable("single_names")
+                .HasKey(_ => _.Id);
+
+            modelBuilder.Entity<MultiKeyItem>()
+                .ToTable("multi_names")
                 .HasKey(_ => _.Id);
 
             base.OnModelCreating(modelBuilder);
