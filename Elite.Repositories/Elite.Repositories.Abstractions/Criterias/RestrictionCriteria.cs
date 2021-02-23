@@ -23,7 +23,7 @@ namespace Elite.Repositories.Abstractions.Criterias
 
             return new RestrictionCriteria
             {
-                RestrictionTemplate = string.Join("&& ", items).Trim(),
+                RestrictionTemplate = items.Any() ? string.Join("&& ", items).Trim() : "1 == 1",
                 Arguments = zipped.Select(_ => _.Second).ToArray(),
             };
         }
