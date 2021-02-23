@@ -21,7 +21,7 @@ namespace Elite.Repositories.Abstractions.Criterias
         {
             return new PagingInfo
             {
-                CurrentPage = criteria.PageIndex + 1,
+                CurrentPage = criteria.PageIndex,
                 Percentage = Math.Round(criteria.PageIndex / (Math.Ceiling((double)virtualCount / criteria.PageSize) - 1), 3),
                 RecordsPerPage = criteria.PageSize,
                 VirtualNumberOfPages = (int)Math.Ceiling((double)virtualCount / criteria.PageSize),
