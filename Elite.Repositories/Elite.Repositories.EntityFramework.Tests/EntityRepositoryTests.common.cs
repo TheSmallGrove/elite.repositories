@@ -86,10 +86,10 @@ namespace Elite.Repositories.EntityFramework.Tests
                 countAfterInsert.Should().Be(count + 1);
                 countAfterCommit.Should().Be(count + 1);
                 found.Should().NotBeNull();
-                found.Id.Should().Equals(newItem.Id);
-                found.Name.Should().Equals(newItem.Name);
-                found.Letter.Should().Equals(newItem.Letter);
-                found.Size.Should().Equals(newItem.Size);
+                found.Id.Should().Be(newItem.Id);
+                found.Name.Should().Be(newItem.Name);
+                found.Letter.Should().Be(newItem.Letter);
+                found.Size.Should().Be(newItem.Size);
             }
         }
 
