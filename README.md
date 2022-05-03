@@ -4,6 +4,15 @@ This library aims to be an easy to use, dependency container friendly implementa
 
 The library is build to be highly estensible, with a basic abstraction assembly and a concrete implementation that uses Entity Framework Core for querying data.
 
+## Installation
+
+To install the library please use Visual Studio package manager or try the following powershell statement
+
+    // abstraction library
+    Install-Package Elite.Repositories.Abstractions -Version 1.1.0.18662   
+    // entity framework implementation (includes abstractions)
+    Install-Package Elite.Repositories.EntityFramework -Version 1.1.0.18662
+
 ## Getting started
 
 To build the data layer, as the pattern suggests, you have to create a repository for each entity. This said, the first step is to create the entity itself:
