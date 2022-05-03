@@ -237,10 +237,10 @@ namespace Elite.Repositories.EntityFramework.Tests
                 // ASSERT
                 countAfterInsert.Should().Be(count + 1);
                 found.Should().NotBeNull();
-                found.Id.Should().Equals(newItem.Id);
-                found.Name.Should().Equals(newItem.Name);
-                found.Letter.Should().Equals(newItem.Letter);
-                found.Size.Should().Equals(newItem.Size);
+                found.Id.Should().Be(newItem.Id);
+                found.Name.Should().Be(newItem.Name);
+                found.Letter.Should().Be(newItem.Letter);
+                found.Size.Should().Be(newItem.Size);
             }
         }
 
@@ -317,10 +317,10 @@ namespace Elite.Repositories.EntityFramework.Tests
                 // ASSERT
                 countAfterUpdate.Should().Be(count);
                 found.Should().NotBeNull();
-                found.Id.Should().Equals(oldItem.Id);
-                found.Name.Should().Equals(oldItem.Name);
-                found.Letter.Should().Equals(oldItem.Letter);
-                found.Size.Should().Equals(oldItem.Size);
+                found.Id.Should().Be(oldItem.Id);
+                found.Name.Should().Be(oldItem.Name);
+                found.Letter.Should().Be(oldItem.Letter);
+                found.Size.Should().Be(oldItem.Size);
             }
         }
 
