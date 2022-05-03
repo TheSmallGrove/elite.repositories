@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elite.Repositories.EntityFramework", "Elite.Repositories.EntityFramework\Elite.Repositories.EntityFramework.csproj", "{66A9165B-1522-4B4F-97DB-EF9C14C48540}"
 EndProject
@@ -20,10 +20,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elite.Repositories.EntityFr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{D4BE963B-BBB5-401A-BC2F-7A98B7A436A9}"
 	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{1A530971-0824-48E9-B5A6-2F0CF8887245}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsole", "TestConsole\TestConsole.csproj", "{1A530971-0824-48E9-B5A6-2F0CF8887245}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <IsPackable>true</IsPackable>
-    <VersionPrefix>1.1.1.18681</VersionPrefix>
+    <VersionPrefix>6.0.0.19115</VersionPrefix>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/TheSmallGrove/elite.repositories</PackageProjectUrl>
     <Authors>Andrea Boschin</Authors>
